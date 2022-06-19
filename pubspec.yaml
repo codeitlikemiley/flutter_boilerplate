@@ -2,23 +2,30 @@ name: client
 version: 1.0.0+1
 publish_to: none
 description: Flutter Boilerplate Clean Architecture
-environment: 
-  sdk: '>=2.17.3 <3.0.0'
+environment:
+  sdk: ">=2.17.3 <3.0.0"
 
-dependencies: 
+dependencies:
   cupertino_icons: ^1.0.2
   envify: ^2.0.2
-  get: 4.6.5
-  flutter: 
+  flutter:
     sdk: flutter
+  get: 4.6.5
 
-dev_dependencies: 
+dev_dependencies:
   build_runner: ^2.1.8
   envify_generator: ^2.0.2
   flutter_lints: ^2.0.0
-  flutter_test: 
+  flutter_rename_app_plus: ^1.1.0
+  flutter_test:
     sdk: flutter
 
-flutter: 
+flutter:
   uses-material-design: true
 
+flutter_rename_app_plus:
+  application_name: Client
+  dart_package_name: Client
+  application_id: dev.goldcoders.client
+  bundle_id: dev.goldcoders.client
+  android_package_name: dev.goldcoders.client
