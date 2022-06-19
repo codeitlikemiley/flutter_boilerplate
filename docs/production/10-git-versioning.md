@@ -48,7 +48,7 @@ Note: you need to add the script below on `flutter build appbundle --release`
 on codemagic you dont need to add the command of flutter just this command will do
 
 ```
---build-number=$(($(google-play get-latest-build-number --package-name 'com.watchenterprise.app') + 1))
+--build-number=$(($(google-play get-latest-build-number --package-name $APP_BUNDLE_ID) + 1))
 ```
 
 # PRODUCTION
