@@ -1,6 +1,5 @@
-import 'package:client/env.dart';
-
 import 'domain/core/constants/env.dart';
+import 'env.dart';
 
 class ConfigEnvironments {
   static const String _currentEnvironments = Env.appEnv;

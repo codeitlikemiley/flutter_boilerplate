@@ -1,7 +1,7 @@
-import 'package:client/config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../config.dart';
 import '../../domain/core/constants/env.dart';
 import '../../presentation/screens.dart';
 import 'bindings/controllers/controllers_bindings.dart';
@@ -9,7 +9,10 @@ import 'routes.dart';
 
 class EnvironmentsBadge extends StatelessWidget {
   final Widget child;
-  const EnvironmentsBadge({required this.child});
+  const EnvironmentsBadge({
+    required this.child,
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var env = ConfigEnvironments.getEnvironments()['env'];

@@ -1,1 +1,1 @@
-export 'package:client/presentation/home/home.screen.dart';
+export '../../presentation/home/home.screen.dart';

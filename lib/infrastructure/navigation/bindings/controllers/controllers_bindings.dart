@@ -1,1 +1,1 @@
-export 'package:client/infrastructure/navigation/bindings/controllers/home.controller.binding.dart'; 
+export '../../../../infrastructure/navigation/bindings/controllers/home.controller.binding.dart';
