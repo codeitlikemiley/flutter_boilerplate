@@ -1,5 +1,5 @@
-import 'package:client/domain/core/constants/env.dart';
-import 'package:client/env.dart';
+import 'package:client/constants/env.dart';
+import 'package:client/env/env.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

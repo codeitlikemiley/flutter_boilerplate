@@ -1,4 +1,4 @@
-import 'domain/core/constants/env.dart';
+import '../constants/env.dart';
 import 'env.dart';
 
 class ConfigEnvironments {
