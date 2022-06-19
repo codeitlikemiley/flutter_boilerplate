@@ -1,4 +1,4 @@
-name: Test Android App Workflow
+name: Test Flutter App Workflow
 
 # This workflow is triggered on pushes to the repository.
 
@@ -50,13 +50,15 @@ jobs:
           APP_ENV: ${{ secrets.APP_ENV }}
           APP_NAME: ${{ secrets.APP_NAME }}
           APP_VERSION: ${{ secrets.APP_VERSION }}
-          APP_BUILD_NUMBER: ${{ secrets.APP_BUILD_NUMBER }}
+          APP_BUNDLE_ID: ${{ secrets.APP_BUNDLE_ID }}
+          APP_APPLE_ID: ${{ secrets.APP_APPLE_ID }}
         run: |
           cat <<EOF > .env
           APP_ENV=$APP_ENV
           APP_NAME=$APP_NAME
           APP_VERSION=$APP_VERSION
-          APP_BUILD_NUMBER=$APP_BUILD_NUMBER
+          APP_BUNDLE_ID=$APP_BUNDLE_ID
+          APP_APPLE_ID=$APP_APPLE_ID
           EOF
       - run: flutter pub run build_runner build
       # Statically analyze the Dart code for any errors.
@@ -64,13 +66,3 @@ jobs:
 
       # Run widget tests for our flutter project.
       - run: flutter test
-
-    # Build apk.
-      - run: flutter build apk
-
-    # Upload generated apk to the artifacts.
-      - name: Release App
-        uses: actions/upload-artifact@v1
-        with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk

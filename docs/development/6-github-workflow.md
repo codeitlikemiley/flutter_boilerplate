@@ -6,9 +6,9 @@
 
 2. choose what workflow you want.
 
-- android_main.yaml
-- ios_android_main.yaml
-- test_only.yaml
+- android_main.yaml.txt
+- ios_android_main.yaml.txt
+- test_only.yaml.txt
 
 Note: Build Minutes cost a lot if using macOS VM ie. `ios_android_main.yaml` config
 
