@@ -1,4 +1,4 @@
-## Change the App Name
+## [Change the App Name](https://pub.dev/packages/flutter_rename_app_plus)
 
 ## SetUp and Usage
 

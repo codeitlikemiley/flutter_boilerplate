@@ -4,7 +4,7 @@
 
 - Dart
 - Flutter
-- FVM
+- [FVM](https://fvm.app/docs/getting_started/installation)
 - vscode (optional)
 
 
