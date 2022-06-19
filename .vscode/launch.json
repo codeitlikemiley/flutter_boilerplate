@@ -1,0 +1,85 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dart Run All Unit test and Widget Test",
+      "request": "launch",
+      "type": "dart",
+      "program": "./test/"
+    },
+    {
+      "name": "Integration Test",
+      "request": "launch",
+      "type": "dart",
+      "program": "./integration_test/"
+    },
+    {
+      "name": "Current Device: Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "Current Device: Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "Current Device: Release Mode",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "Android: Debug",
+      "request": "launch",
+      "type": "dart",
+      //TODO(golcoders): add device ID
+      // "deviceId": "",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "Android: Profile",
+      "request": "launch",
+      "type": "dart",
+      //TODO(golcoders): add device ID
+      // "deviceId": "",,
+      "flutterMode": "profile"
+    },
+    {
+      "name": "iPhone: Debug",
+      "request": "launch",
+      "type": "dart",
+      //TODO(golcoders): add device ID
+      // "deviceId": "",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "iPhone SE: Debug",
+      "request": "launch",
+      "type": "dart",
+      //TODO(golcoders): add device ID
+      // "deviceId": "",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "iPhone: Profile",
+      "request": "launch",
+      "type": "dart",
+      //TODO(golcoders): add device ID
+      // "deviceId": "",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "iPhone SE: Profile",
+      "request": "launch",
+      "type": "dart",
+      //TODO(golcoders): add device ID
+      // "deviceId": "",
+      "flutterMode": "profile"
+    },
+  ],
+
+}
+
