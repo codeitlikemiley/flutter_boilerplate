@@ -1,0 +1,66 @@
+name: Test Flutter App Workflow
+
+# This workflow is triggered on pushes to the repository.
+
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+
+
+# on: push    # Default will running for every branch.
+
+jobs:
+  build:
+    # This job will run on ubuntu virtual machine
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Export Release Timestamp
+        run: echo "RELEASE_VERSION=v$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+      # Setup Java environment in order to build the Android app.
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      # Setup the flutter environment.
+      - uses: subosito/flutter-action@v1
+        with:
+          #channel: "stable" # 'dev', 'alpha', default to: 'stable'
+          flutter-version: '3.0.2' # you can also specify exact version of flutter
+
+      # Get flutter dependencies.
+      - run: flutter pub get
+
+      # Check for any formatting issues in the code.
+      - run: flutter format --set-exit-if-changed .
+
+      - name: Build Runner on Envify
+        # we need to create the .env
+        # run touch .env and touch .env.dev
+        # we need to figure out if we can pass here """ Multiline String
+        # and Replace some of its value with ${{env.working-directory}}
+        # echo $MY_VAR $FIRST_NAME $MIDDLE_NAME $LAST_NAME.
+        # secrets is the context for the Secret variable we set on github repo
+        # to add secret keys: https://github.com/Azure/actions-workflow-samples/blob/master/assets/create-secrets-for-GitHub-workflows.md
+        # for example usage: https://docs.github.com/en/actions/learn-github-actions/contexts#example-usage-of-the-secrets-context
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          APP_VERSION: ${{ secrets.APP_VERSION }}
+          APP_BUILD_NUMBER: ${{ secrets.APP_BUILD_NUMBER }}
+        run: |
+          cat <<EOF > .env
+          APP_ENV=$APP_ENV
+          APP_NAME=$APP_NAME
+          APP_VERSION=$APP_VERSION
+          APP_BUILD_NUMBER=$APP_BUILD_NUMBER
+          EOF
+      - run: flutter pub run build_runner build
+      # Statically analyze the Dart code for any errors.
+      - run: flutter analyze .
+
+      # Run widget tests for our flutter project.
+      - run: flutter test

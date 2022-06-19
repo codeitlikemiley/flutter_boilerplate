@@ -1,0 +1,84 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Build and Release Apps for iOs and Android
+jobs:
+  build:
+    name: Build Apps
+    runs-on: macos-latest
+    steps:
+      - name: Export Release Timestamp
+        run: echo "RELEASE_VERSION=v$(date +'%Y.%m.%d.%H.%M.%S')" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: "15"
+          distribution: "adopt"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Install pub Dependencies
+        run: flutter pub get
+
+      - name: Format Code
+        run: flutter format --set-exit-if-changed .
+
+      - name: Build Runner on Envify
+        # we need to create the .env
+        # run touch .env and touch .env.dev
+        # we need to figure out if we can pass here """ Multiline String
+        # and Replace some of its value with ${{env.working-directory}}
+        # echo $MY_VAR $FIRST_NAME $MIDDLE_NAME $LAST_NAME.
+        # secrets is the context for the Secret variable we set on github repo
+        # to add secret keys: https://github.com/Azure/actions-workflow-samples/blob/master/assets/create-secrets-for-GitHub-workflows.md
+        # for example usage: https://docs.github.com/en/actions/learn-github-actions/contexts#example-usage-of-the-secrets-context
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          APP_VERSION: ${{ secrets.APP_VERSION }}
+          APP_BUILD_NUMBER: ${{ secrets.APP_BUILD_NUMBER }}
+        run: |
+          cat <<EOF > .env
+          APP_ENV=$APP_ENV
+          APP_NAME=$APP_NAME
+          APP_VERSION=$APP_VERSION
+          APP_BUILD_NUMBER=$APP_BUILD_NUMBER
+          EOF
+      - name: Generate Code with Build Runner
+        run: flutter pub run build_runner build
+
+      - name: Make Sure We Adhere to Best Code Practices, Analyzing Code...
+        run: flutter analyze .
+
+      - name: Run Tests
+        run: flutter test
+
+      - name: Build Android App
+        run: flutter build apk --split-per-abi
+
+      - name: Build iOS App
+        run: |
+          flutter build ios --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+
+      - name: Release Apps
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.RELEASE_VERSION }}
+          name: ${{ env.RELEASE_VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "build/app/outputs/apk/release/*.apk,build/ios/iphoneos/app.ipa"
