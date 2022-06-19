@@ -15,12 +15,32 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.1.8
   envify_generator: ^2.0.2
+  flutter_launcher_icons: ^0.9.3
   flutter_lints: ^2.0.0
   flutter_rename_app_plus: ^1.1.0
   flutter_test:
     sdk: flutter
 
 flutter:
+  assets:
+    - assets/images/
+  # For Custom Font Usage uncomment the example below
+  #fonts:
+  #  - family: avenir
+  #    fonts:
+  #      - asset: assets/fonts/avenir/AvenirLTPro-Medium.otf
+  #        weight: 400
+  #        style: normal
+  #  - family: avenir-italic
+  #    fonts:
+  #      - asset: assets//fonts/avenir/AvenirLTPro-Oblique.otf
+  #        style: italic
+  #        weight: 400
+  #  - family: avenir-bold
+  #    fonts:
+  #      - asset: assets/fonts/avenir/AvenirLTPro-Heavy.otf
+  #        weight: 800
+  #        style: normal
   uses-material-design: true
 
 flutter_rename_app_plus:
