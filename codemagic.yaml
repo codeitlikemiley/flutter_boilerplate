@@ -1,0 +1,98 @@
+workflows:
+  default-workflow:
+    name: Build and Test iOS and Android / Publish to AppStore and Google Play Store
+    max_build_duration: 75
+    environment:
+      vars:
+        # please generate the keys here before filling this up then upload to codemagic
+        GCLOUD_SERVICE_ACCOUNT_CREDENTIALS: # Add your Google Cloud Service Account Credentials here
+        APP_STORE_CONNECT_PRIVATE_KEY: # Add AppStore Connect Private Key
+        APP_STORE_CONNECT_KEY_IDENTIFIER: # Add AppStore Key Identifier
+        APP_STORE_CONNECT_ISSUER_ID: # Add AppStore Connect Issuer Id
+        # set your env here from .env
+        APP_ENV: LOCAL
+        APP_NAME: MyApp
+        APP_VERSION: 1.0.0
+        APP_BUNDLE_ID: com.goldcoders.client # change this to your app bundle id
+        APP_APPLE_ID:  # Add your Apple App ID here
+        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
+        FCI_KEYSTORE: # add google keystore
+        FCI_KEYSTORE_PASSWORD: # add keystore password
+        FCI_KEY_PASSWORD: #add keystore password
+        FCI_KEY_ALIAS: # add keystore alias
+        CERTIFICATE_PRIVATE_KEY: # add ios certificate key
+      flutter: 3.0.2
+      xcode: latest
+      cocoapods: default
+    cache:
+      cache_paths: []
+    scripts:
+      - flutter emulators --launch apple_ios_simulator
+      - |
+        # set up key.properties
+        echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
+        cat >> "$FCI_BUILD_DIR/android/key.properties" <<EOF
+        storePassword=$FCI_KEYSTORE_PASSWORD
+        keyPassword=$FCI_KEY_PASSWORD
+        keyAlias=$FCI_KEY_ALIAS
+        storeFile=/tmp/keystore.keystore
+        EOF
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - |
+        cat <<EOF > .env
+        APP_ENV=$APP_ENV
+        APP_NAME=$APP_NAME
+        APP_VERSION=$APP_VERSION
+        APP_BUNDLE_ID=$APP_BUNDLE_ID
+        APP_APPLE_ID=$APP_APPLE_ID
+        EOF
+      - flutter packages pub get
+      - flutter pub run build_runner build
+      - flutter analyze
+      - flutter drive --driver=test_driver/integration_driver.dart  --target=integration_test/app_test.dart
+      - flutter test
+      - |
+        LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number $APP_APPLE_ID)
+
+        cd $CM_BUILD_DIR/ios
+
+        agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+      - flutter build appbundle --release --build-number=$(($(google-play get-latest-build-number
+        --package-name $APP_BUNDLE_ID) + 1))
+      - find . -name "Podfile" -execdir pod install \;
+      - keychain initialize
+      - app-store-connect fetch-signing-files $APP_BUNDLE_ID --type IOS_APP_STORE
+        --create
+      - keychain add-certificates
+      - xcode-project use-profiles
+      - flutter build ipa --export-options-plist=~/export_options.plist
+    artifacts:
+      - build/**/outputs/apk/**/*.apk
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - '*.snap'
+      - build/windows/**/*.msix
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - #change to your email address
+      slack:
+        channel: # change to slack channel
+        notify_on_build_start: true
+      google_play:
+        credentials:  # add google play json credentials
+        track: internal
+        in_app_update_priority: 0
+      app_store_connect:
+        api_key: # addd api key of appstore connect
+        key_id: # add appstore connect key id
+        issuer_id: # add appstore connect issuer_id
+        submit_to_testflight: true
+        submit_to_app_store: false
+      scripts:
+        - jarsigner -verify -verbose -certs $FCI_BUILD_OUTPUT_DIR/*.aab
