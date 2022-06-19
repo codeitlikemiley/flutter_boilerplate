@@ -1,28 +1,30 @@
-class Environments {
-  static const String PRODUCTION = 'prod';
-  static const String QAS = 'QAS';
-  static const String DEV = 'dev';
-  static const String LOCAL = 'local';
-}
+import 'package:client/env.dart';
+
+import 'domain/core/constants/env.dart';
 
 class ConfigEnvironments {
-  static const String _currentEnvironments = Environments.LOCAL;
+  static const String _currentEnvironments = Env.appEnv;
   static final List<Map<String, String>> _availableEnvironments = [
     {
-      'env': Environments.LOCAL,
-      'url': 'http://localhost:8080/api/',
+      'env': LOCAL,
+      'appDomain': 'goldcoders.test',
+      'apiDomain': 'goldcoders.test',
+      'apiPrefix': 'api/',
+      'apiVersion': 'v1',
     },
     {
-      'env': Environments.DEV,
-      'url': '',
+      'env': STAGING,
+      'appDomain': 'staging.goldcoders.dev',
+      'apiDomain': 'staging.goldcoders.test',
+      'apiPrefix': 'api/',
+      'apiVersion': 'v1',
     },
     {
-      'env': Environments.QAS,
-      'url': '',
-    },
-    {
-      'env': Environments.PRODUCTION,
-      'url': '',
+      'env': PRODUCTION,
+      'appDomain': 'goldcoders.dev',
+      'apiDomain': 'api.goldcoders.dev',
+      'apiPrefix': '',
+      'apiVersion': 'v1',
     },
   ];
 
