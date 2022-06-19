@@ -8,7 +8,6 @@
 .buildlog/
 .history
 .svn/
-migrate_working_dir/
 
 # IntelliJ related
 *.iml
@@ -45,3 +44,26 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# added flutter_sdk on gitignore
+.fvm/flutter_sdk
+
+# add vscode settings
+.vscode/settings.json
+
+# env files
+.env
+.env.dev
+!.env.example
+env.g.dart
+**/*.g.dart
+**/*.freezed.dart
+
+# added .bak files
+*.bak
+
+# added *.gs
+*.gs
+# Supabase
+**/supabase/.branches
+**/supabase/.temp
